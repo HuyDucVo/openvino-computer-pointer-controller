@@ -1,7 +1,6 @@
 '''
 This is a sample class for a model. You may choose to use it as-is or make any changes to it.
 This has been provided just to give you an idea of how to structure your model class.
-This is the base class of the face_detection.py, facial_landmarks_detection.py, gaze_estimation.py, head_pose_estimation.py
 '''
 
 class Model_X:
