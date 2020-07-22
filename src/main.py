@@ -48,19 +48,20 @@ def test_run(args):
     gaze_model = GazeEstimation(args.gazeestimation, args.device, args.cpu_extension)
 
     gaze_model.load_model()
-    gaze_model.check_model()
     print("Gaze Estimation Model Loaded...")
 
-     while True:
+    '''
+    while True:
         # Read the next frame
         try:
             frame = next(feeder.next_batch())
         except StopIteration:
             break
-            
+
         key_pressed = cv2.waitKey(60)
         frame_count += 1
         #print(int((frame_count) % int(FPS)))
+    '''
 
     
 

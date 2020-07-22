@@ -43,7 +43,8 @@ class GazeEstimation:
         supported_layers = self.core.query_network(network=self.model, device_name=self.device)
         self.unsupported_layers = [R for R in self.model.layers.keys() if R not in supported_layers]
         
-        self.check_model()
+        self.check_model() 
+        print("Checked gaze-esimation model")
 
         self.exec_net = self.core.load_network(network=self.model, device_name=self.device, num_requests=1)
         
@@ -71,7 +72,7 @@ class GazeEstimation:
             supported_layers = self.core.query_network(network = self.network, device_name=self.device)
             self.unsupported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]
             if len(self.unsupported_layers)!=0:
-                log.error("Unsupported layers")
+                print("Unsupported layers")
                 exit(1)
 
     def preprocess_input(self, image):
