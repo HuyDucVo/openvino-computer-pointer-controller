@@ -9,7 +9,7 @@ import math
 
 class GazeEstimation:
     '''
-    Class for the Face Detection Model.
+    Class for the Gaze Estimation Model.
     '''
     def __init__(self, model_name, device='CPU', extensions=None):
         '''
@@ -19,6 +19,7 @@ class GazeEstimation:
         self.model_weights = model_name + '.bin'
         self.model_structure = model_name + '.xml'
         self.device = device
+        self.extensions = extensions
 
         #For app
         self.core = None
@@ -59,7 +60,7 @@ class GazeEstimation:
         self.exec_net.start_async(request_id=0, inputs={'left_eye_image': processed_left_eye, 'right_eye_image': processed_right_eye, 'head_pose_angles': head_position})
 
         while self.exec_net.requests[0].wait(-1) == 0:
-            result = self.exec_network.requests[0].outputs[self.output]
+            result = self.exec_net.requests[0].outputs[self.output]
             cords = self.preprocess_output(result[0], head_position)
             return result[0], cords
     

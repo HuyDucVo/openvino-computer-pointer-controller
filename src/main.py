@@ -5,6 +5,7 @@ import numpy as np
 from argparse import ArgumentParser
 from gaze_estimation import GazeEstimation
 from face_detection import FaceDetection
+from head_pose_estimation import HeadPoseEstimation
 from mouse_controller import MouseController
 from input_feeder import InputFeeder
 
@@ -50,9 +51,14 @@ def test_run(args):
     face_model.load_model()
     print("Face Detection Model Loaded...")
 
+    head_pose_estimation = HeadPoseEstimation(args.headpose, args.device, args.cpu_extension)
+    head_pose_estimation.load_model()
+    print("Head Pose Detection Model Loaded...")
+
     gaze_model = GazeEstimation(args.gazeestimation, args.device, args.cpu_extension)
     gaze_model.load_model()
     print("Gaze Estimation Model Loaded...")
+
 
     frame_count = 0
 
@@ -64,11 +70,12 @@ def test_run(args):
         croppedFace, face_coords = face_model.predict(frame.copy())
         if frame_count%5==0:
             
-            #print(croppedFace)
-            cv2.imshow('video',cv2.resize(frame,(500,500)))
+            #Testing the face detection here
+            #frame = cv2.rectangle(frame, (face_coords[0],face_coords[1] ), (face_coords[2],face_coords[3]),  (255,0,0) , -1 )
+            cv2.imshow('video',frame)
+        #key = cv2.waitKey(1)
         
-        key = cv2.waitKey(1)
-        
+
     
 if __name__ == '__main__':
     #arg = '-f ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001 -l ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009 -hp ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001 -ge ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002 -i ../bin/demo.mp4 -it video -d CPU -debug headpose gaze face'.split(' ')
