@@ -38,7 +38,6 @@ def build_argparser():
 def test_run(args):
     feeder = None
     if args.input_type == 'video' or args.input_type == 'image':
-        extension = str(args.input).split('.')[1]
         feeder = InputFeeder(args.input_type, args.input)
 
 
@@ -55,21 +54,22 @@ def test_run(args):
     gaze_model.load_model()
     print("Gaze Estimation Model Loaded...")
 
-    '''
-    while True:
-        # Read the next frame
-        try:
-            frame = next(feeder.next_batch())
-        except StopIteration:
+    frame_count = 0
+
+    for frame in feeder.next_batch():
+        if frame is None:
             break
-
-        key_pressed = cv2.waitKey(60)
         frame_count += 1
-        #print(int((frame_count) % int(FPS)))
-    '''
 
+        croppedFace, face_coords = face_model.predict(frame.copy())
+        if frame_count%5==0:
+            
+            #print(croppedFace)
+            cv2.imshow('video',cv2.resize(frame,(500,500)))
+        
+        key = cv2.waitKey(1)
+        
     
-
 if __name__ == '__main__':
     #arg = '-f ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001 -l ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009 -hp ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001 -ge ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002 -i ../bin/demo.mp4 -it video -d CPU -debug headpose gaze face'.split(' ')
     args = build_argparser().parse_args()

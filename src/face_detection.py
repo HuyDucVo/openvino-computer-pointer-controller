@@ -46,16 +46,16 @@ class FaceDetection:
         self.input = next(iter(self.network.inputs))
         self.output = next(iter(self.network.outputs))
 
-    def predict(self, image):
+    def predict(self, image):  
         '''
         TODO: You will need to complete this method.
         This method is meant for running predictions on the input image.
         '''
         img_processed = self.preprocess_input(image.copy())
-        self.exec_network.start_async(request_id= 0, inputs={self.input: img_processed})
+        self.exec_net.start_async(request_id= 0, inputs={self.input: img_processed})
         while self.exec_net.requests[0].wait(-1) == 0:
-            result = self.exec_network.requests[0].outputs[self.output]
-            coords = self.preprocess_output(result[0], image)
+            result = self.exec_net.requests[0].outputs[self.output]
+            coords = self.preprocess_output(result)
             if (len(coords)==0):
                 return 0, 0          
             coords = coords[0]
@@ -94,10 +94,10 @@ class FaceDetection:
         you might have to preprocess the output. This function is where you can do that.
         '''
         coords =[]
-        outs = outputs[self.output_names][0][0]
+        outs = outputs[0][0]
         for out in outs:
             conf = out[2]
-            if conf>prob_threshold:
+            if conf>self.prob_threshold:
                 x_min=out[3]
                 y_min=out[4]
                 x_max=out[5]
