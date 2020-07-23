@@ -75,6 +75,8 @@ def test_run(args):
             cv2.imshow('video',frame)
         #key = cv2.waitKey(1)
         
+        head_pose_output = head_pose_estimation.predict(croppedFace)
+        #print(head_pose_output)
 
     
 if __name__ == '__main__':

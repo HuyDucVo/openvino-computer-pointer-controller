@@ -55,7 +55,7 @@ class HeadPoseEstimation:
         img_processed = self.preprocess_input(image.copy())
         self.exec_net.start_async(request_id= 0, inputs={self.input: img_processed})
         while self.exec_net.requests[0].wait(-1) == 0:
-            result = self.exec_net.requests[0].outputs[self.output]
+            result = self.exec_net.requests[0].outputs
             return_result = self.preprocess_output(result)
             return return_result
 
@@ -85,5 +85,8 @@ class HeadPoseEstimation:
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
         '''
-        result = np.array([outputs['angle_y_fc'][0][0], outputs['angle_p_fc'][0][0], outputs['angle_r_fc'][0][0]])
-        return result
+        return_output = []
+        return_output.append(outputs['angle_y_fc'].tolist()[0][0])
+        return_output.append(outputs['angle_p_fc'].tolist()[0][0])
+        return_output.append(outputs['angle_r_fc'].tolist()[0][0])
+        return return_output
