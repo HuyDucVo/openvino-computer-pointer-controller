@@ -4,8 +4,10 @@ import numpy as np
 
 from argparse import ArgumentParser
 from gaze_estimation import GazeEstimation
+from face_detection import FaceDetection
 from mouse_controller import MouseController
 from input_feeder import InputFeeder
+
 
 def build_argparser():
     parser = ArgumentParser()
@@ -40,13 +42,16 @@ def test_run(args):
         feeder = InputFeeder(args.input_type, args.input)
 
 
-    mc = MouseController("medium", "fast")
+    mc = MouseController("low", "fast")
 
 
     feeder.load_data()
 
-    gaze_model = GazeEstimation(args.gazeestimation, args.device, args.cpu_extension)
+    face_model = FaceDetection(args.face, args.device, args.cpu_extension)
+    face_model.load_model()
+    print("Face Detection Model Loaded...")
 
+    gaze_model = GazeEstimation(args.gazeestimation, args.device, args.cpu_extension)
     gaze_model.load_model()
     print("Gaze Estimation Model Loaded...")
 
@@ -66,6 +71,6 @@ def test_run(args):
     
 
 if __name__ == '__main__':
-    #arg = '-f ../models/face-detection-adas-binary-0001/FP16/face-detection-adas-binary-0001.xml -l ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009.xml -hp ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001.xml -ge ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002 -i ../bin/demo.mp4 -it video -d CPU -debug headpose gaze face'.split(' ')
+    #arg = '-f ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001 -l ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009 -hp ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001 -ge ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002 -i ../bin/demo.mp4 -it video -d CPU -debug headpose gaze face'.split(' ')
     args = build_argparser().parse_args()
     test_run(args) 
