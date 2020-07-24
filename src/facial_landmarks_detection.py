@@ -43,7 +43,6 @@ class FacialLandmarksDetection:
         print("Checked facial-landmark-dection model")
 
         self.exec_net = self.core.load_network(network=self.network, device_name=self.device,num_requests=1)
-
         self.input = next(iter(self.network.inputs))
         self.output = next(iter(self.network.outputs))
 
@@ -57,7 +56,7 @@ class FacialLandmarksDetection:
         while self.exec_net.requests[0].wait(-1) == 0:
             result = self.exec_net.requests[0].outputs[self.output]
             self.image = image
-            return self.preprocess_output(result[self.output][0])
+            return self.preprocess_output(result[0])
 
     def check_model(self):
         if len(self.unsupported_layers)!=0 :
@@ -93,12 +92,10 @@ class FacialLandmarksDetection:
         box = (leye_x, leye_y, reye_x, reye_y)
 
         h, w = self.image.shape[0:2]
-        # w = image.shape[1]
         box = box * np.array([w, h, w, h])
         box = box.astype(np.int32)
 
         (lefteye_x, lefteye_y, righteye_x, righteye_y) = box
-        # cv2.rectangle(image,(lefteye_x,lefteye_y),(righteye_x,righteye_y),(255,0,0))
 
         le_xmin = lefteye_x - self.eye_surrounding_area
         le_ymin = lefteye_y - self.eye_surrounding_area
@@ -114,4 +111,5 @@ class FacialLandmarksDetection:
         right_eye = self.image[re_ymin:re_ymax, re_xmin:re_xmax]
         eye_coords = [[le_xmin, le_ymin, le_xmax, le_ymax], [re_xmin, re_ymin, re_xmax, re_ymax]]
 
+        #cv2.rectangle(self.image,(lefteye_x,lefteye_y),(righteye_x,righteye_y),(255,0,0))
         return left_eye, right_eye, eye_coords
