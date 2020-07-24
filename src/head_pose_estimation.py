@@ -74,7 +74,9 @@ class HeadPoseEstimation:
         Before feeding the data into the model for inference,
         you might have to preprocess it. This function is where you can do that.
         '''
+        net_input_shape = []
         net_input_shape = self.network.inputs[self.input].shape
+        p_frame = None
         p_frame = cv2.resize(image, (net_input_shape[3], net_input_shape[2]))
         p_frame = p_frame.transpose(2, 0, 1)
         p_frame = p_frame.reshape(1, *p_frame.shape)
@@ -86,6 +88,9 @@ class HeadPoseEstimation:
         you might have to preprocess the output. This function is where you can do that.
         '''
         return_output = []
+        y = 0
+        p = 0
+        r = 0
         y = outputs['angle_y_fc'].tolist()[0][0]
         p = outputs['angle_p_fc'].tolist()[0][0]
         r = outputs['angle_r_fc'].tolist()[0][0]

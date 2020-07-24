@@ -19,3 +19,6 @@ class MouseController:
 
     def move(self, x, y):
         pyautogui.moveRel(x*self.precision, -1*y*self.precision, duration=self.speed)
+        #If you use VMware and want yo check the mouse actually moving, write some more below or just use the below
+        #pyautogui.rightClick(pyautogui.position()[0],pyautogui.position()[1])
+        

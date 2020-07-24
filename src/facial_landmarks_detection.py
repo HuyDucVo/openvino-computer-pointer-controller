@@ -72,44 +72,65 @@ class FacialLandmarksDetection:
         Before feeding the data into the model for inference,
         you might have to preprocess it. This function is where you can do that.
         '''
+        net_input_shape = []
         net_input_shape = self.network.inputs[self.input].shape
+        p_frame = None
         p_frame = cv2.resize(image, (net_input_shape[3], net_input_shape[2]))
         p_frame = p_frame.transpose(2, 0, 1)
         p_frame = p_frame.reshape(1, *p_frame.shape)
         return p_frame
 
 
-    def preprocess_output(self, outputs):
+    def preprocess_output(self, outputs, debug_flag = False):
         '''
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
         '''
-        leye_x = outputs[0].tolist()[0][0]
-        leye_y = outputs[1].tolist()[0][0]
-        reye_x = outputs[2].tolist()[0][0]
-        reye_y = outputs[3].tolist()[0][0]
+        left_eye_x =0
+        left_eye_y = 0 
+        right_eye_x = 0
+        right_eye_y = 0 
+
+        left_eye_x = outputs[0].tolist()[0][0]
+        left_eye_y = outputs[1].tolist()[0][0]
+        right_eye_x = outputs[2].tolist()[0][0]
+        right_eye_y = outputs[3].tolist()[0][0]
         
-        box = (leye_x, leye_y, reye_x, reye_y)
-
+        both_eye_coors = []
+        both_eye_coors = (left_eye_x, left_eye_y, right_eye_x, right_eye_y)
+        
         h, w = self.image.shape[0:2]
-        box = box * np.array([w, h, w, h])
-        box = box.astype(np.int32)
+        both_eye_coors = both_eye_coors * np.array([w, h, w, h])
+        both_eye_coors = both_eye_coors.astype(np.int32)
 
-        (lefteye_x, lefteye_y, righteye_x, righteye_y) = box
+        (left_eye_from_image_x, left_eye_from_image_y, right_eye_from_image_x, right_eye_from_image_y) = both_eye_coors
 
-        le_xmin = lefteye_x - self.eye_surrounding_area
-        le_ymin = lefteye_y - self.eye_surrounding_area
-        le_xmax = lefteye_x + self.eye_surrounding_area
-        le_ymax = lefteye_y + self.eye_surrounding_area
+        left_eye_x_min = 0
+        left_eye_y_min = 0
+        left_eye_x_max = 0
+        left_eye_y_max = 0
 
-        re_xmin = righteye_x - self.eye_surrounding_area
-        re_ymin = righteye_y - self.eye_surrounding_area
-        re_xmax = righteye_x + self.eye_surrounding_area
-        re_ymax = righteye_y + self.eye_surrounding_area
+        left_eye_x_min = left_eye_from_image_x - self.eye_surrounding_area
+        left_eye_y_min = left_eye_from_image_y - self.eye_surrounding_area
+        left_eye_x_max = left_eye_from_image_x + self.eye_surrounding_area
+        left_eye_y_max = left_eye_from_image_y + self.eye_surrounding_area
 
-        left_eye = self.image[le_ymin:le_ymax, le_xmin:le_xmax]
-        right_eye = self.image[re_ymin:re_ymax, re_xmin:re_xmax]
-        eye_coords = [[le_xmin, le_ymin, le_xmax, le_ymax], [re_xmin, re_ymin, re_xmax, re_ymax]]
+        right_eye_x_min = 0
+        right_eye_y_min = 0
+        right_eye_x_max = 0
+        right_eye_y_max = 0
 
-        #cv2.rectangle(self.image,(lefteye_x,lefteye_y),(righteye_x,righteye_y),(255,0,0))
-        return left_eye, right_eye, eye_coords
+        right_eye_x_min = right_eye_from_image_x - self.eye_surrounding_area
+        right_eye_y_min = right_eye_from_image_y - self.eye_surrounding_area
+        right_eye_x_max = right_eye_from_image_x + self.eye_surrounding_area
+        right_eye_y_max = right_eye_from_image_y + self.eye_surrounding_area
+
+        left_eye_box = self.image[left_eye_y_min:left_eye_y_max, left_eye_x_min:left_eye_x_max]
+        right_eye_box = self.image[right_eye_y_min:right_eye_y_max, right_eye_x_min:right_eye_x_max]
+        both_eye_boxes = [[left_eye_x_min, left_eye_y_min, left_eye_x_max, left_eye_y_max], [right_eye_x_min, right_eye_y_min, right_eye_x_max, right_eye_y_max]]
+
+        if debug_flag == True:
+            cv2.rectangle(self.image,(left_eye_from_image_x,left_eye_from_image_y),(right_eye_from_image_x,right_eye_from_image_y),(255,0,0))
+            cv2.imshow('video',self.image)
+
+        return left_eye_box, right_eye_box, both_eye_boxes

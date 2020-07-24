@@ -1,6 +1,7 @@
 import cv2
 import os
 import numpy as np
+import time
 
 from argparse import ArgumentParser
 from gaze_estimation import GazeEstimation
@@ -12,37 +13,49 @@ from input_feeder import InputFeeder
 
 def build_argparser():
     parser = ArgumentParser()
-    parser.add_argument("-f", "--face", required=True, type=str,
-                        help="Path to .xml file of Face Detection model.")
-    parser.add_argument("-l", "--landmarks", required=True, type=str,
-                        help="Path to .xml file of Facial Landmark Detection model.")
-    parser.add_argument("-hp", "--headpose", required=True, type=str,
-                        help="Path to .xml file of Head Pose Estimation model.")
-    parser.add_argument("-ge", "--gazeestimation", required=True, type=str,
-                        help="Path to .xml file of Gaze Estimation model.")
-    parser.add_argument("-i", "--input", required=True, type=str,
-                        help="Path to video file or enter cam for webcam")
-    parser.add_argument("-it", "--input_type", required=True, type=str,
-                        help="Provide the source of video frames." + 'video' + " " + 'webcam' + " | " + 'image')
+    parser.add_argument("-f", "--face", required=False, type=str,
+                        help="Face detection model directory",
+                        default='../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001')
+    parser.add_argument("-l", "--landmarks", required=False, type=str,
+                        help="Facial Landmark Detection model directory",
+                        default='../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009')
+    parser.add_argument("-hp", "--headpose", required=False, type=str,
+                        help="Head Pose Estimation model directory",
+                        default='../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001')
+    parser.add_argument("-g", "--gazeestimation", required=False, type=str,
+                        help="Gaze Estimation model directory",
+                        default='../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002')
+    parser.add_argument("-i", "--input", required=False, type=str,
+                        help="Input file directory",
+                        default='../bin/demo.mp4')
+    parser.add_argument("-t", "--input_type", required=False, default='video', type=str,
+                        help="Source type is " + 'video' + "|" + 'webcam' + " | " + 'image')
     parser.add_argument("-debug", "--debug", required=False, type=str, nargs='+',
-                        default=[],
-                        help="To debug each model's output visually, type the model name with comma seperated after --debug")
+                        default='0',
+                        help="Partial debug each part of inference pipeline")
     parser.add_argument("-ld", "--cpu_extension", required=False, type=str,
                         default=None,
-                        help="linker libraries if have any")
-    parser.add_argument("-d", "--device", type=str, default="CPU",
-                        help="Provide the target device: "
-                             "CPU, GPU, FPGA or MYRIAD is acceptable.")
-
+                        help="CPU Extension")
+    parser.add_argument("-d", "--device", type=str, required=False, default="CPU",
+                        help="Target device: CPU, GPU, VPU, FPGA")
+    parser.add_argument("-p", "--precision", type=str, required=False, default="low",
+                        help="Precision Mouse Controller")
+    parser.add_argument("-s", "--speed", type=str, required=False, default="fast",
+                        help="Speed Mouse Controller")
     return parser
 
 def test_run(args):
     feeder = None
     if args.input_type == 'video' or args.input_type == 'image':
         feeder = InputFeeder(args.input_type, args.input)
+    elif args.input_type == 'webcam':
+        feeder = InputFeeder(args.input_type, args.input)
+    else:
+        print("Input not found. Exit")
+        exit(1)
 
-
-    mc = MouseController("low", "fast")
+    
+    mouse_controller = MouseController(args.precision, args.speed)
 
 
     feeder.load_data()
@@ -70,14 +83,9 @@ def test_run(args):
         if frame is None:
             break
         frame_count += 1
-
+        key = cv2.waitKey(60)
         croppedFace, face_coords = face_model.predict(frame.copy())
-        if frame_count%5==0:
-            
-            #Testing the face detection here
-            #frame = cv2.rectangle(frame, (face_coords[0],face_coords[1] ), (face_coords[2],face_coords[3]),  (255,0,0) , -1 )
-            cv2.imshow('video',frame)
-        #key = cv2.waitKey(1)
+        
         
         head_pose_output = head_pose_estimation.predict(croppedFace.copy())
         #print(head_pose_output)
@@ -86,6 +94,17 @@ def test_run(args):
         #cv2.imshow('video',facial_landmarks_detection.image)
         #key = cv2.waitKey(60)
     
+        new_mouse_coord, gaze_vector = gaze_model.predict(left_eye, right_eye, head_pose_output)
+        if frame_count%10==0:
+            #Testing the face detection here
+            #frame = cv2.rectangle(frame, (face_coords[0],face_coords[1] ), (face_coords[2],face_coords[3]),  (255,0,0) , -1 )
+            #cv2.imshow('video',frame)
+            #mouse_controller.move(new_mouse_coord[0],new_mouse_coord[1])    
+            print(new_mouse_coord)
+        if key==27:
+            break
+
+
 if __name__ == '__main__':
     #arg = '-f ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001 -l ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009 -hp ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001 -ge ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002 -i ../bin/demo.mp4 -it video -d CPU -debug headpose gaze face'.split(' ')
     args = build_argparser().parse_args()

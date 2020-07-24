@@ -61,8 +61,8 @@ class GazeEstimation:
 
         while self.exec_net.requests[0].wait(-1) == 0:
             result = self.exec_net.requests[0].outputs[self.output]
-            cords = self.preprocess_output(result[0], head_position)
-            return result[0], cords
+            new_mouse_coord, gaze_vector = self.preprocess_output(result[0], head_position)
+            return new_mouse_coord, gaze_vector
     
     def check_model(self):
         if len(self.unsupported_layers) != 0:
@@ -78,24 +78,27 @@ class GazeEstimation:
         Before feeding the data into the model for inference,
         you might have to preprocess it. This function is where you can do that.
         '''
+        network_input_shape = []
         network_input_shape = self.network.inputs['left_eye_image'].shape
+        p_frame = None
         p_frame = cv2.resize(image, (network_input_shape[3], network_input_shape[2]))
         p_frame = p_frame.transpose(2, 0, 1)
         p_frame = p_frame.reshape(1, *p_frame.shape)
         return p_frame
 
-    def preprocess_output(self, outputs):
+    def preprocess_output(self, outputs, head_position):
         '''
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
         '''
-        roll = head_position[2]
-        gaze_vector = output / cv2.norm(output)
-
-        cosValue = math.cos(roll * math.pi / 180.0)
-        sinValue = math.sin(roll * math.pi / 180.0)
-
-
-        x = gaze_vector[0] * cosValue * gaze_vector[1] * sinValue
-        y = gaze_vector[0] * sinValue * gaze_vector[1] * cosValue
-        return (x, y)
+        rollValue = 0
+        rollValue = head_position[2] 
+        cosValue = 0
+        cosValue = math.cos(rollValue * math.pi / 180.0)
+        sinValue = 0
+        sinValue = math.sin(rollValue * math.pi / 180.0)
+        x = 0
+        x = outputs[0] * cosValue + outputs[1] * sinValue
+        y = 0
+        y = -outputs[0] *  sinValue+ outputs[1] * cosValue
+        return (x,y), outputs

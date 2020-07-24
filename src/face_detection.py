@@ -82,7 +82,9 @@ class FaceDetection:
         Before feeding the data into the model for inference,
         you might have to preprocess it. This function is where you can do that.
         '''
+        net_input_shape = []
         net_input_shape = self.network.inputs[self.input].shape
+        p_frame = None
         p_frame = cv2.resize(image, (net_input_shape[3], net_input_shape[2]))
         p_frame = p_frame.transpose(2, 0, 1)
         p_frame = p_frame.reshape(1, *p_frame.shape)
@@ -95,6 +97,11 @@ class FaceDetection:
         '''
         coords =[]
         outs = outputs[0][0]
+        conf = 0
+        x_min = 0
+        x_max = 0
+        y_min = 0
+        y_max = 0
         for out in outs:
             conf = out[2]
             if conf>self.prob_threshold:
