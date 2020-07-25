@@ -112,4 +112,10 @@ def test_run(args):
 if __name__ == '__main__':
     #arg = '-f ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001 -l ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009 -hp ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001 -ge ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002 -i ../bin/demo.mp4 -it video -d CPU -debug headpose gaze face'.split(' ')
     args = build_argparser().parse_args()
-    test_run(args) 
+    try:
+        test_run(args) 
+    except:
+        e = sys.exc_info()[0]
+        print(e)
+    finally:
+        print("Computer Pointer Controller Finished")
