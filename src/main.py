@@ -33,9 +33,9 @@ def build_argparser():
                         default='../bin/demo.mp4')
     parser.add_argument("-t", "--input_type", required=False, default='video', type=str,
                         help="Source type is " + 'video' + "|" + 'webcam' + " | " + 'image')
-    parser.add_argument("-debug", "--debug", required=False, type=str, nargs='+',
-                        default='0',
-                        help="Partial debug each part of inference pipeline. 0 : all stats report | 1 : draw face detected | 2 : draw eyes detected | 3 : print coors of mouse with gaze estimation)
+    parser.add_argument("-flag", "--flag", required=False, type=str, nargs='+',
+                        help="Partial debug each part of inference pipeline. 0 : all stats report | 1 : draw face detected | 2 : draw eyes detected | 3 : print coors of mouse with gaze estimation",
+                        default='0')
     parser.add_argument("-ld", "--cpu_extension", required=False, type=str,
                         default=None,
                         help="CPU Extension")
