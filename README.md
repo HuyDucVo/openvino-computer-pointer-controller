@@ -39,21 +39,6 @@ Or you can follow the documentation below to type in a custom command. For examp
 
 ## Benchmarks
 - Model Loading Time report:  
--- FP16
-```
-Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
-Loading time:  0.09444904327392578
-Inference time:  0.01121175491203696
-Head Pose Detection Model:  ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001
-Loading time:  0.06176471710205078
-Inference time: 0.0012917437795865333
-Facial Landmark Detection Model Load Time:  ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009
-Loading time:  0.051276445388793945
-Inference time: 0.0006316395129187633
-Gaze Estimation Model Load Time:  ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002
-Loading time:  0.08012700080871582
-Inference time: 0.0012575771849034196
-```
 -- FP 32
 ```
 Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
@@ -68,7 +53,19 @@ Inference time: 0.0006059266753115896
 Gaze Estimation Model Load Time:  ../models/gaze-estimation-adas-0002/FP32/gaze-estimation-adas-0002
 Loading time:  0.07913541793823242
 Inference time: 0.0012479838678392313
-```
+-- FP16
+Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
+Loading time:  0.09444904327392578
+Inference time:  0.01121175491203696
+Head Pose Detection Model:  ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001
+Loading time:  0.06176471710205078
+Inference time: 0.0012917437795865333
+Facial Landmark Detection Model Load Time:  ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009
+Loading time:  0.051276445388793945
+Inference time: 0.0006316395129187633
+Gaze Estimation Model Load Time:  ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002
+Loading time:  0.08012700080871582
+Inference time: 0.0012575771849034196
 -- INT8
 ```
 Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
@@ -85,7 +82,14 @@ Loading time:  0.134962797164917
 Inference time: 0.0009797629663499735
 ```
 ## Results
-*TODO:* Discuss the benchmark results and explain why you are getting the results you are getting. For instance, explain why there is difference in inference time for FP32, FP16 and INT8 models.
-
+Recalling, FP16 and INT8 requires less precision to perform the calculation. Thus, it requires less power for memory and does inference faster. It has a drawback is that not all models we found online is FP16 or INT8, but FP32. Converting to FP16 requires more work and not always work.  
+Theorictically, FP16 and INT8 can work 2x compared with FP32.  
+Both FP16 and INT8 save memory and could give a significant speedup comparing to FP32.  
+Since we are experimenting on a small set for this project, the different may not too obvious. But in the Head Pose Detection Model, we can see the order of Inference Time trend is FP32 -> FP16 -> INT8
+Sources:   
+https://blog.inten.to/hardware-for-deep-learning-part-3-gpu-8906c1644664#ea08  
+https://docs.openvinotoolkit.org/latest/openvino_docs_performance_int8_vs_fp32.html  
 ### Edge Cases
-There will be certain situations that will break your inference flow. For instance, lighting changes or multiple people in the frame. Explain some of the edge cases you encountered in your project and how you solved them to make your project more robust.
+There are some edge case for people with disability. We can see that it detect the iris of the eyes to determine the vector. And some people have a different kind of eyes ball.  
+Another case is we you move the mouse out of the window.  
+Last egde case is the OS and environment when do this, I use CPU and VMware to perform this project and it may not grab the image of the mouse. But we can add some code as I put in the file to check if it is actually moving.
