@@ -35,12 +35,51 @@ Or you can follow the documentation below to type in a custom command. For examp
 -d : --device: Target device: CPU, GPU, VPU, FPGA  
 -p : --precision: Precision Mouse Controller  
 -s : --speed: Speed Mouse Controller  
-
+  
+--help: Helping menu
 '''
 
 ## Benchmarks
-*TODO:* Include the benchmark results of running your model on multiple hardwares and multiple model precisions. Your benchmarks can include: model loading time, input/output processing time, model inference time etc.
-
+- Model Loading Time report:  
+-- FP16
+Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
+Loading time:  0.09444904327392578
+Inference time:  0.01121175491203696
+Head Pose Detection Model:  ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001
+Loading time:  0.06176471710205078
+Inference time: 0.0012917437795865333
+Facial Landmark Detection Model Load Time:  ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009
+Loading time:  0.051276445388793945
+Inference time: 0.0006316395129187633
+Gaze Estimation Model Load Time:  ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002
+Loading time:  0.08012700080871582
+Inference time: 0.0012575771849034196
+-- FP 32
+Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
+Loading time:  0.09214973449707031
+Inference time:  0.011434975316969015
+Head Pose Detection Model:  ../models/head-pose-estimation-adas-0001/FP32/head-pose-estimation-adas-0001
+Loading time:  0.05920982360839844
+Inference time: 0.00131635746713412
+Facial Landmark Detection Model Load Time:  ../models/landmarks-regression-retail-0009/FP32/landmarks-regression-retail-0009
+Loading time:  0.051842451095581055
+Inference time: 0.0006059266753115896
+Gaze Estimation Model Load Time:  ../models/gaze-estimation-adas-0002/FP32/gaze-estimation-adas-0002
+Loading time:  0.07913541793823242
+Inference time: 0.0012479838678392313
+-- INT8
+Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
+Loading time:  0.09600019454956055
+Inference time:  0.011204444755942134
+Head Pose Detection Model:  ../models/head-pose-estimation-adas-0001/FP16-INT8/head-pose-estimation-adas-0001
+Loading time:  0.10241842269897461
+Inference time: 0.0010039725546109473
+Facial Landmark Detection Model Load Time:  ../models/landmarks-regression-retail-0009/FP16-INT8/landmarks-regression-retail-0009
+Loading time:  0.06687498092651367
+Inference time: 0.0005788762690657276
+Gaze Estimation Model Load Time:  ../models/gaze-estimation-adas-0002/FP16-INT8/gaze-estimation-adas-0002
+Loading time:  0.134962797164917
+Inference time: 0.0009797629663499735
 ## Results
 *TODO:* Discuss the benchmark results and explain why you are getting the results you are getting. For instance, explain why there is difference in inference time for FP32, FP16 and INT8 models.
 

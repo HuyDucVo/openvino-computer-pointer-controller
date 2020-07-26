@@ -81,7 +81,7 @@ class FacialLandmarksDetection:
         return p_frame
 
 
-    def preprocess_output(self, outputs, debug_flag = False):
+    def preprocess_output(self, outputs):
         '''
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
@@ -129,8 +129,4 @@ class FacialLandmarksDetection:
         right_eye_box = self.image[right_eye_y_min:right_eye_y_max, right_eye_x_min:right_eye_x_max]
         both_eye_boxes = [[left_eye_x_min, left_eye_y_min, left_eye_x_max, left_eye_y_max], [right_eye_x_min, right_eye_y_min, right_eye_x_max, right_eye_y_max]]
 
-        if debug_flag == True:
-            cv2.rectangle(self.image,(left_eye_from_image_x,left_eye_from_image_y),(right_eye_from_image_x,right_eye_from_image_y),(255,0,0))
-            cv2.imshow('video',self.image)
-
-        return left_eye_box, right_eye_box, both_eye_boxes
+        return left_eye_box, right_eye_box, both_eye_coors
