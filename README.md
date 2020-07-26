@@ -18,9 +18,9 @@ Please use model downloader from openvino on you end to download these model bel
 - Gaze Estimation Model: https://docs.openvinotoolkit.org/latest/_models_intel_gaze_estimation_adas_0002_description_gaze_estimation_adas_0002.html  
 
 ## Demo
-The default value to run the program is included with the minimal setting. You can simply run 'python3 main.py' from the src directory.  
+The default value to run the program is included with the minimal setting. You can simply run ```python3 main.py``` from the src directory.  
 Or you can follow the documentation below to type in a custom command. For example:  
-'-f ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001 -l ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009 -hp ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001 -g ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002 -i ../bin/demo.mp4 -t video -d CPU -debug 0 -p low -s fast'  
+```-f ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001 -l ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009 -hp ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001 -g ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002 -i ../bin/demo.mp4 -t video -d CPU -debug 0 -p low -s fast```   
 
 ## Documentation
 -f : --face: Face detection model directory  
