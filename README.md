@@ -21,7 +21,24 @@ Please use model downloader from openvino on you end to download these model bel
 The default value to run the program is included with the minimal setting. You can simply run ```python3 main.py``` from the src directory.  
 Or you can follow the documentation below to type in a custom command. For example:  
 ```-f ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001 -l ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009 -hp ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001 -g ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002 -i ../bin/demo.mp4 -t video -d CPU -debug 0 -p low -s fast```   
-
+  
+For this project, if you want to show:  
+- all stats  
+```
+python3 main.py -flag 0
+```
+- draw the face  
+```
+python3 main.py -flag 1
+```
+- draw the eyes  
+```
+python3 main.py -flag 2
+```
+- print the mouse coors  
+```
+python3 main.py -flag 3
+```
 ## Documentation
 -f : --face: Face detection model directory  
 -l : --landmarks: Facial Landmark Detection model directory  
@@ -68,6 +85,7 @@ Inference time: 0.0006316395129187633
 Gaze Estimation Model Load Time:  ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002
 Loading time:  0.08012700080871582
 Inference time: 0.0012575771849034196
+```
 -- INT8
 ```
 Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
