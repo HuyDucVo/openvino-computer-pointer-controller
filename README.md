@@ -53,9 +53,13 @@ Inference time: 0.0006059266753115896
 Gaze Estimation Model Load Time:  ../models/gaze-estimation-adas-0002/FP32/gaze-estimation-adas-0002
 Loading time:  0.07913541793823242
 Inference time: 0.0012479838678392313
+<<<<<<< HEAD
 ```
 -- FP16
 ```
+=======
+-- FP16
+>>>>>>> master
 Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
 Loading time:  0.09444904327392578
 Inference time:  0.01121175491203696
