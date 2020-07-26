@@ -1,5 +1,5 @@
 # Computer Pointer Controller
-
+<p align="center"> <img src="/images/logo.jpg" width="500px"> </p>  
 A Computer Vision app built with OpenVino library that can control the PC mouse by the direction of eyes from image, camera or video. 
 
 ## Project Set Up and Installation
@@ -113,3 +113,9 @@ https://docs.openvinotoolkit.org/latest/openvino_docs_performance_int8_vs_fp32.h
 There are some edge case for people with disability. We can see that it detect the iris of the eyes to determine the vector. And some people have a different kind of eyes ball.  
 Another case is we you move the mouse out of the window.  
 Last egde case is the OS and environment when do this, I use CPU and VMware to perform this project and it may not grab the image of the mouse. But we can add some code as I put in the file to check if it is actually moving.
+### Images
+<p align="center">
+<img src="/images/face.gif" width="500px">
+<img src="/images/eyes.gif" width="500px">
+<img src="/images/result.gif" width="500px">
+</p>
