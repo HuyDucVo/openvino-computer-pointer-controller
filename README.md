@@ -23,7 +23,6 @@ Or you can follow the documentation below to type in a custom command. For examp
 '-f ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001 -l ../models/landmarks-regression-retail-0009/FP16/landmarks-regression-retail-0009 -hp ../models/head-pose-estimation-adas-0001/FP16/head-pose-estimation-adas-0001 -g ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002 -i ../bin/demo.mp4 -t video -d CPU -debug 0 -p low -s fast'  
 
 ## Documentation
-'''
 -f : --face: Face detection model directory  
 -l : --landmarks: Facial Landmark Detection model directory  
 -hp : --headpose: Head Pose Estimation model directory  
@@ -37,11 +36,11 @@ Or you can follow the documentation below to type in a custom command. For examp
 -s : --speed: Speed Mouse Controller  
   
 --help: Helping menu
-'''
 
 ## Benchmarks
 - Model Loading Time report:  
 -- FP16
+```
 Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
 Loading time:  0.09444904327392578
 Inference time:  0.01121175491203696
@@ -54,7 +53,9 @@ Inference time: 0.0006316395129187633
 Gaze Estimation Model Load Time:  ../models/gaze-estimation-adas-0002/FP16/gaze-estimation-adas-0002
 Loading time:  0.08012700080871582
 Inference time: 0.0012575771849034196
+```
 -- FP 32
+```
 Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
 Loading time:  0.09214973449707031
 Inference time:  0.011434975316969015
@@ -67,7 +68,9 @@ Inference time: 0.0006059266753115896
 Gaze Estimation Model Load Time:  ../models/gaze-estimation-adas-0002/FP32/gaze-estimation-adas-0002
 Loading time:  0.07913541793823242
 Inference time: 0.0012479838678392313
+```
 -- INT8
+```
 Face Detection Model Load Time:  ../models/face-detection-adas-binary-0001/FP32-INT1/face-detection-adas-binary-0001
 Loading time:  0.09600019454956055
 Inference time:  0.011204444755942134
@@ -80,6 +83,7 @@ Inference time: 0.0005788762690657276
 Gaze Estimation Model Load Time:  ../models/gaze-estimation-adas-0002/FP16-INT8/gaze-estimation-adas-0002
 Loading time:  0.134962797164917
 Inference time: 0.0009797629663499735
+```
 ## Results
 *TODO:* Discuss the benchmark results and explain why you are getting the results you are getting. For instance, explain why there is difference in inference time for FP32, FP16 and INT8 models.
 
