@@ -8,8 +8,8 @@ Directories:
 - /src: The models caller, mouse controller, and main file for test run  
 - /models: The actual implemented model .xml and .bin files  
 - /bin: The input media for video  
-- /Tutorial Documents: All the tutorial for further use  
-- requirements.txt: All the core dependencies are here  
+- /Tutorial Documents: All the tutorial for further use  <br><br>
+- requirements.txt: All the core dependencies are here    <br><br>
 Models:
 Please use model downloader from openvino on you end to download these model below and put them in /models directory. You can re-download the model or update the model.  
 - Face Detection: https://docs.openvinotoolkit.org/latest/_models_intel_face_detection_adas_binary_0001_description_face_detection_adas_binary_0001.html  
