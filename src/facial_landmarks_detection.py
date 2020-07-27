@@ -51,10 +51,10 @@ class FacialLandmarksDetection:
         This method is meant for running predictions on the input image.
         '''
         img_processed = self.preprocess_input(image.copy())
+        self.image = image
         self.exec_net.start_async(request_id= 0, inputs={self.input: img_processed})
         while self.exec_net.requests[0].wait(-1) == 0:
             result = self.exec_net.requests[0].outputs[self.output]
-            self.image = image
             return self.preprocess_output(result[0])
 
     def check_model(self):
