@@ -3,20 +3,85 @@
 A Computer Vision app built with OpenVino library that can control the PC mouse by the direction of eyes from image, camera or video. 
 
 ## Project Set Up and Installation
-Install all the requirements from the requirements.txt
-Directories:  
-- /src: The models caller, mouse controller, and main file for test run  
-- /models: The actual implemented model .xml and .bin files  
-- /bin: The input media for video  
-- /Tutorial Documents: All the tutorial for further use  <br><br>
-- requirements.txt: All the core dependencies are here    <br><br>
+Install OpenVINO and all basic Deep Learning package: https://docs.openvinotoolkit.org/  
+Depend on your OS, you can folow how to setup virtual environment with this website https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/   
+Install all the requirements from the requirements.txt by using pip from the main repo directory   
+```
+pip install -r requirements.txt
+```
 Models:
 Please use model downloader from openvino on you end to download these model below and put them in /models directory. You can re-download the model or update the model.  
 - Face Detection: https://docs.openvinotoolkit.org/latest/_models_intel_face_detection_adas_binary_0001_description_face_detection_adas_binary_0001.html  
 - Head Pose Estimation: https://docs.openvinotoolkit.org/latest/_models_intel_head_pose_estimation_adas_0001_description_head_pose_estimation_adas_0001.html  
 - Facial Landmarks Detection: https://docs.openvinotoolkit.org/latest/_models_intel_landmarks_regression_retail_0009_description_landmarks_regression_retail_0009.html  
 - Gaze Estimation Model: https://docs.openvinotoolkit.org/latest/_models_intel_gaze_estimation_adas_0002_description_gaze_estimation_adas_0002.html  
-
+Files Overview:  
+- /src: The models caller, mouse controller, and main file for test run  
+-- face_detection.py: Face Detection Model performs loading args, load model, pre-process input, predict, and pre-process output  
+-- facial_landmarks_detection.py: Facial Landmark Detection performs loading args, load model, pre-process input, predict, and pre-process output 
+-- gaze_estimation.py: Gaze Estimation performs loading args, load model, pre-process input, predict, and pre-process output  
+-- head_pose_estimation.py: Head Pose Estimation Model performs loading args, load model, pre-process input, predict, and pre-process output  
+-- input_feeder.py: Load the input data based on the user's request (video/cam)  
+-- main.py: Driver will perform pipeline of inference to determine the new mouse coordination.   
+-- model.py: Base/tempplate model for further use if needed  
+-- mouse_controller.py: Control the mouse via python library  
+- /models: The actual implemented model .xml and .bin files. Model will spereated by name and version directories. Each directory will have FP16, FP32, INT8 based on the precision.   
+- /bin: The input media for video  
+-- demo.mp4: default video input  
+- /Tutorial Documents: All the tutorial for further use  <br><br>
+- requirements.txt: All the core dependencies are here    <br><br>
+Relevant Tree Structure:  
+```
+├── bin
+│   └── demo.mp4
+├── LICENSE
+├── models
+│   ├── face-detection-adas-binary-0001
+│   │   └── FP32-INT1
+│   │       ├── face-detection-adas-binary-0001.bin
+│   │       └── face-detection-adas-binary-0001.xml
+│   ├── gaze-estimation-adas-0002
+│   │   ├── FP16
+│   │   │   ├── gaze-estimation-adas-0002.bin
+│   │   │   └── gaze-estimation-adas-0002.xml
+│   │   ├── FP16-INT8
+│   │   │   ├── gaze-estimation-adas-0002.bin
+│   │   │   └── gaze-estimation-adas-0002.xml
+│   │   └── FP32
+│   │       ├── gaze-estimation-adas-0002.bin
+│   │       └── gaze-estimation-adas-0002.xml
+│   ├── head-pose-estimation-adas-0001
+│   │   ├── FP16
+│   │   │   ├── head-pose-estimation-adas-0001.bin
+│   │   │   └── head-pose-estimation-adas-0001.xml
+│   │   ├── FP16-INT8
+│   │   │   ├── head-pose-estimation-adas-0001.bin
+│   │   │   └── head-pose-estimation-adas-0001.xml
+│   │   └── FP32
+│   │       ├── head-pose-estimation-adas-0001.bin
+│   │       └── head-pose-estimation-adas-0001.xml
+│   └── landmarks-regression-retail-0009
+│       ├── FP16
+│       │   ├── landmarks-regression-retail-0009.bin
+│       │   └── landmarks-regression-retail-0009.xml
+│       ├── FP16-INT8
+│       │   ├── landmarks-regression-retail-0009.bin
+│       │   └── landmarks-regression-retail-0009.xml
+│       └── FP32
+│           ├── landmarks-regression-retail-0009.bin
+│           └── landmarks-regression-retail-0009.xml
+├── README.md
+├── requirements.txt
+├── src
+│   ├── face_detection.py
+│   ├── facial_landmarks_detection.py
+│   ├── gaze_estimation.py
+│   ├── head_pose_estimation.py
+│   ├── input_feeder.py
+│   ├── main.py
+│   ├── model.py
+│   ├── mouse_controller.py
+```
 ## Demo
 The default value to run the program is included with the minimal setting. You can simply run ```python3 main.py``` from the src directory.  
 Or you can follow the documentation below to type in a custom command. For example:  

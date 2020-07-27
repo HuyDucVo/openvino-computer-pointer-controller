@@ -2,7 +2,7 @@ import cv2
 import os
 import numpy as np
 import time
-
+import logging
 from argparse import ArgumentParser
 from gaze_estimation import GazeEstimation
 from face_detection import FaceDetection
@@ -37,7 +37,7 @@ def build_argparser():
     parser.add_argument("-t", "--input_type", required=False, default='video', type=str,
                         help="Source type is " + 'video' + "|" + 'webcam' + " | " + 'image')
     parser.add_argument("-flag", "--flag", required=False, type=str,
-                        help="Partial debug each part of inference pipeline. 0 : all stats report | 1 : draw face detected | 2 : draw eyes detected | 3 : print coors of mouse with gaze estimation and move the mouse",
+                        help="Partial debug each part of inference pipeline. 0 : all stats report to cmd | 1 : draw face detected | 2 : draw eyes detected | 3 : logging.info coors of mouse with gaze estimation and move the mouse",
                         default='4')
     parser.add_argument("-ld", "--cpu_extension", required=False, type=str,
                         default=None,
@@ -51,14 +51,18 @@ def build_argparser():
     return parser
 
 def test_run(args):
+    logging.getLogger().setLevel(logging.INFO)
     feeder = None
     activate_frame_count = 10
+    logging.warning("Running default value activate frame count = 10")
     if args.input_type == 'video' or args.input_type == 'image':
         feeder = InputFeeder(args.input_type, args.input)
+        if args.input == '../bin/demo.mp4':
+            logging.warning("Running default setting and input")
     elif args.input_type == 'webcam':
         feeder = InputFeeder(args.input_type, args.input)
     else:
-        print("Input not found. Exit")
+        logging.error("Input not found")
         exit(1)
 
     
@@ -73,28 +77,29 @@ def test_run(args):
     face_model = FaceDetection(args.face, args.device, args.cpu_extension)
     face_model.load_model()
     face_model_load_time = time.time()-start_time
-    print("Face Detection Model Loaded...")
+    logging.info("Face Detection Model Loaded...")
+    
 
     head_pose_estimation_load_time = 0
     start_time = time.time()
     head_pose_estimation = HeadPoseEstimation(args.headpose, args.device, args.cpu_extension)
     head_pose_estimation.load_model()
     head_pose_estimation_load_time = time.time()-start_time
-    print("Head Pose Detection Model Loaded...")
+    logging.info("Head Pose Detection Model Loaded...")
 
     facial_landmarks_detection_load_time = 0
     start_time = time.time()
     facial_landmarks_detection = FacialLandmarksDetection(args.landmarks, args.device, args.cpu_extension)
     facial_landmarks_detection.load_model()
     facial_landmarks_detection_load_time = time.time()-start_time
-    print("Facial Landmark Detection Model Loaded...")
+    logging.info("Facial Landmark Detection Model Loaded...")
 
     gaze_model_load_time = 0
     start_time = time.time()
     gaze_model = GazeEstimation(args.gazeestimation, args.device, args.cpu_extension)
     gaze_model.load_model()
     gaze_model_load_time = time.time()-start_time
-    print("Gaze Estimation Model Loaded...")
+    logging.info("Gaze Estimation Model Loaded...")
 
     frame_count = 0
 
@@ -142,11 +147,11 @@ def test_run(args):
             key = cv2.waitKey(60)
         elif args.flag == "3":
             if frame_count == 1:
-                print("Printing mouse coors: ") 
-            print(move_to_coors_mouse)
+                logging.info("Printing mouse coors: ") 
+            logging.info(move_to_coors_mouse)
 
 
-    #Report
+    #Print Report
     if args.flag == "0":
         print('------------- BEGIN REPORT -------------')
         avg_inference_face_model = total_face_model_inference_time / frame_count
@@ -181,6 +186,6 @@ if __name__ == '__main__':
         test_run(args) 
     except:
         e = sys.exc_info()[0]
-        print(e)
+        logging.error(e)
     finally:
-        print("Computer Pointer Controller Finished")
+        logging.warning("Computer Pointer Controller Finished")

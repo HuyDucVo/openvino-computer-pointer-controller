@@ -4,6 +4,7 @@ This has been provided just to give you an idea of how to structure your model c
 '''
 import cv2
 import numpy as np
+import logging
 from openvino.inference_engine import IECore, IENetwork
 import math
 
@@ -40,7 +41,7 @@ class FaceDetection:
         self.unsupported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]
 
         self.check_model()
-        print("Checked face-dection model")
+        logging.info("Checked face-dection model")
 
         self.exec_net = self.core.load_network(network=self.network, device_name=self.device,num_requests=1)
 
@@ -67,7 +68,7 @@ class FaceDetection:
             supported_layers = self.core.query_network(network = self.network, device_name=self.device)
             self.unsupported_layers = [l for l in self.network.layers.keys() if l not in supported_layers]
             if len(self.unsupported_layers)!=0:
-                print("Unsupported layers")
+                logging.error("Unsupported layers")
                 exit(1)
 
 
