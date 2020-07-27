@@ -85,12 +85,10 @@ class FacialLandmarksDetection:
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
         '''
-        height=self.image.shape[0]
-        width=self.image.shape[1]
         both_eye_coors = []
-        both_eye_coors.append(outputs[0].tolist()[0][0]*width)
-        both_eye_coors.append(outputs[1].tolist()[0][0]*height)
-        both_eye_coors.append(outputs[2].tolist()[0][0]*width)
-        both_eye_coors.append(outputs[3].tolist()[0][0]*height)
+        both_eye_coors.append(outputs[0].tolist()[0][0]*self.image.shape[1])
+        both_eye_coors.append(outputs[1].tolist()[0][0]*self.image.shape[0])
+        both_eye_coors.append(outputs[2].tolist()[0][0]*self.image.shape[1])
+        both_eye_coors.append(outputs[3].tolist()[0][0]*self.image.shape[0])
         both_eye_coors = [round(x) for x in both_eye_coors]
         return self.image[both_eye_coors[1]-20 : both_eye_coors[1]+20 , both_eye_coors[0]-20:both_eye_coors[0]+20],self.image[both_eye_coors[3]-20 : both_eye_coors[3]+20 , both_eye_coors[2]-20:both_eye_coors[2]+20], both_eye_coors
