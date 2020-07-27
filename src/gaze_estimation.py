@@ -61,8 +61,8 @@ class GazeEstimation:
 
         while self.exec_net.requests[0].wait(-1) == 0:
             result = self.exec_net.requests[0].outputs[self.output]
-            new_mouse_coord, gaze_vector = self.preprocess_output(result[0], head_position)
-            return new_mouse_coord, gaze_vector
+            return self.preprocess_output(result[0], head_position)
+            
     
     def check_model(self):
         if len(self.unsupported_layers) != 0:
@@ -91,6 +91,7 @@ class GazeEstimation:
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
         '''
+        #The math was consulted with online resources
         rollValue = 0
         rollValue = head_position[2] 
         cosValue = 0
@@ -100,5 +101,5 @@ class GazeEstimation:
         x = 0
         x = outputs[0] * cosValue + outputs[1] * sinValue
         y = 0
-        y = -outputs[0] *  sinValue+ outputs[1] * cosValue
-        return (x,y), outputs
+        y = outputs[1] * cosValue - outputs[0] *  sinValue
+        return (x,y)

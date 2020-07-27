@@ -25,7 +25,6 @@ class FacialLandmarksDetection:
         self.network = None
         self.exec_net = None
         self.unsupported_layers = None
-        self.eye_surrounding_area = 10
         self.image = None
 
     def load_model(self):
@@ -86,47 +85,12 @@ class FacialLandmarksDetection:
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
         '''
-        left_eye_x =0
-        left_eye_y = 0 
-        right_eye_x = 0
-        right_eye_y = 0 
-
-        left_eye_x = outputs[0].tolist()[0][0]
-        left_eye_y = outputs[1].tolist()[0][0]
-        right_eye_x = outputs[2].tolist()[0][0]
-        right_eye_y = outputs[3].tolist()[0][0]
-        
+        height=self.image.shape[0]
+        width=self.image.shape[1]
         both_eye_coors = []
-        both_eye_coors = (left_eye_x, left_eye_y, right_eye_x, right_eye_y)
-        
-        h, w = self.image.shape[0:2]
-        both_eye_coors = both_eye_coors * np.array([w, h, w, h])
-        both_eye_coors = both_eye_coors.astype(np.int32)
-
-        (left_eye_from_image_x, left_eye_from_image_y, right_eye_from_image_x, right_eye_from_image_y) = both_eye_coors
-
-        left_eye_x_min = 0
-        left_eye_y_min = 0
-        left_eye_x_max = 0
-        left_eye_y_max = 0
-
-        left_eye_x_min = left_eye_from_image_x - self.eye_surrounding_area
-        left_eye_y_min = left_eye_from_image_y - self.eye_surrounding_area
-        left_eye_x_max = left_eye_from_image_x + self.eye_surrounding_area
-        left_eye_y_max = left_eye_from_image_y + self.eye_surrounding_area
-
-        right_eye_x_min = 0
-        right_eye_y_min = 0
-        right_eye_x_max = 0
-        right_eye_y_max = 0
-
-        right_eye_x_min = right_eye_from_image_x - self.eye_surrounding_area
-        right_eye_y_min = right_eye_from_image_y - self.eye_surrounding_area
-        right_eye_x_max = right_eye_from_image_x + self.eye_surrounding_area
-        right_eye_y_max = right_eye_from_image_y + self.eye_surrounding_area
-
-        left_eye_box = self.image[left_eye_y_min:left_eye_y_max, left_eye_x_min:left_eye_x_max]
-        right_eye_box = self.image[right_eye_y_min:right_eye_y_max, right_eye_x_min:right_eye_x_max]
-        both_eye_boxes = [[left_eye_x_min, left_eye_y_min, left_eye_x_max, left_eye_y_max], [right_eye_x_min, right_eye_y_min, right_eye_x_max, right_eye_y_max]]
-
-        return left_eye_box, right_eye_box, both_eye_coors
+        both_eye_coors.append(outputs[0].tolist()[0][0]*width)
+        both_eye_coors.append(outputs[1].tolist()[0][0]*height)
+        both_eye_coors.append(outputs[2].tolist()[0][0]*width)
+        both_eye_coors.append(outputs[3].tolist()[0][0]*height)
+        both_eye_coors = [round(x) for x in both_eye_coors]
+        return self.image[both_eye_coors[1]-20 : both_eye_coors[1]+20 , both_eye_coors[0]-20:both_eye_coors[0]+20],self.image[both_eye_coors[3]-20 : both_eye_coors[3]+20 , both_eye_coors[2]-20:both_eye_coors[2]+20], both_eye_coors

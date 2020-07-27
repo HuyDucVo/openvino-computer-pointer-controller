@@ -110,30 +110,30 @@ def test_run(args):
         key = cv2.waitKey(60)
 
         start_time = time.time()
-        croppedFace, face_coords = face_model.predict(frame.copy())
+        first_face_box, first_face = face_model.predict(frame.copy())
         total_face_model_inference_time = total_face_model_inference_time + (time.time() - start_time)
         
         start_time = time.time()
-        head_pose_output = head_pose_estimation.predict(croppedFace.copy())
+        head_pose_output = head_pose_estimation.predict(first_face_box.copy())
         total_head_pose_estimation_inference_time = total_head_pose_estimation_inference_time + (time.time() - start_time)
 
         start_time = time.time()
-        left_eye, right_eye, eye_coords = facial_landmarks_detection.predict(croppedFace.copy())
+        left_eye, right_eye, eye_coords= facial_landmarks_detection.predict(first_face_box.copy())
         total_facial_landmarks_detection_inference_time = total_facial_landmarks_detection_inference_time + (time.time() - start_time)
 
         start_time = time.time()
-        new_mouse_coord, gaze_vector = gaze_model.predict(left_eye, right_eye, head_pose_output)
+        move_to_coors_mouse = gaze_model.predict(left_eye, right_eye, head_pose_output)
         total_gaze_model_inference_time = total_gaze_model_inference_time + (time.time() - start_time)
 
         if frame_count%activate_frame_count==0 and (args.flag == "3" or args.flag == "4"):
-            mouse_controller.move(new_mouse_coord[0],new_mouse_coord[1])
+            mouse_controller.move(move_to_coors_mouse[0],move_to_coors_mouse[1])
             cv2.imshow('video',frame)   
             key = cv2.waitKey(60) 
         if key==27:
             break
 
         if args.flag == "1":
-            cv2.rectangle(frame,(face_coords[0],face_coords[1] ), (face_coords[2],face_coords[3]),(255,0,0))
+            cv2.rectangle(frame,(first_face[0],first_face[1] ), (first_face[2],first_face[3]),(255,0,0))
             cv2.imshow('video',frame)
             key = cv2.waitKey(60)
         elif args.flag == "2":
@@ -143,7 +143,7 @@ def test_run(args):
         elif args.flag == "3":
             if frame_count == 1:
                 print("Printing mouse coors: ") 
-            print(new_mouse_coord)
+            print(move_to_coors_mouse)
 
 
     #Report

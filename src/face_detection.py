@@ -27,6 +27,7 @@ class FaceDetection:
         self.exec_net = None
         self.unsupported_layers = None
         self.prob_threshold = 0.6
+        self.image = None
     def load_model(self):
         '''
         TODO: You will need to complete this method.
@@ -52,19 +53,12 @@ class FaceDetection:
         This method is meant for running predictions on the input image.
         '''
         img_processed = self.preprocess_input(image.copy())
+        self.image = image
         self.exec_net.start_async(request_id= 0, inputs={self.input: img_processed})
         while self.exec_net.requests[0].wait(-1) == 0:
             result = self.exec_net.requests[0].outputs[self.output]
-            coords = self.preprocess_output(result)
-            if (len(coords)==0):
-                return 0, 0          
-            coords = coords[0]
-            h=image.shape[0]
-            w=image.shape[1]
-            coords = coords* np.array([w, h, w, h])
-            coords = coords.astype(np.int32)
-            cropped_face = image[coords[1]:coords[3], coords[0]:coords[2]]
-            return cropped_face, coords
+            return self.preprocess_output(result)
+
 
             
     def check_model(self):
@@ -95,19 +89,30 @@ class FaceDetection:
         Before feeding the output of this model to the next model,
         you might have to preprocess the output. This function is where you can do that.
         '''
-        coords =[]
+        face_coords =[]
         outs = outputs[0][0]
         conf = 0
         x_min = 0
         x_max = 0
         y_min = 0
         y_max = 0
+        height=self.image.shape[0]
+        width=self.image.shape[1]
+        
         for out in outs:
             conf = out[2]
             if conf>self.prob_threshold:
-                x_min=out[3]
-                y_min=out[4]
-                x_max=out[5]
-                y_max=out[6]
-                coords.append([x_min,y_min,x_max,y_max])
-        return coords
+                x_min=out[3]*width
+                y_min=out[4]*height
+                x_max=out[5]*width
+                y_max=out[6]*height
+                face_coords.append([x_min,y_min,x_max,y_max])
+        
+        if (len(face_coords)==0):
+            return None       
+
+        #Only need one person, so take the first box with good conf
+        first_face = face_coords[0]
+        first_face = [round(x) for x in first_face]
+        first_face_box = self.image[first_face[1]:first_face[3], first_face[0]:first_face[2]]
+        return first_face_box, first_face
