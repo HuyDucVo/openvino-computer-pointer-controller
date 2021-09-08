@@ -6,7 +6,7 @@ ipaddress==1.0.17
 keyring==10.6.0
 keyrings.alt==3.0
 MouseInfo==0.1.3
-Pillow==6.2.2
+Pillow==8.3.2
 PyAutoGUI==0.9.50
 pycrypto==2.6.1
 PyGetWindow==0.0.8
